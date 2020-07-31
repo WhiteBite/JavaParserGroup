@@ -2,16 +2,15 @@ package ru.whitebite;
 
 
 import java.util.*;
-import java.util.concurrent.CopyOnWriteArrayList;
 
 public class Group {
-    Set<GroupKey> criterions1 = new HashSet<>();
-    Set<GroupKey> criterions2 = new HashSet<>();
-    Set<GroupKey> criterions3 = new HashSet<>();
-    List<String> string = Collections.synchronizedList(new LinkedList<>());  /*new CopyOnWriteArrayList<>();*/
+    public final Set<GroupKey> criterions1 = new HashSet<>();
+    public final Set<GroupKey> criterions2 = new HashSet<>();
+    public final Set<GroupKey> criterions3 = new HashSet<>();
+    public final List<String> string = Collections.synchronizedList(new LinkedList<>());
 
 
-    void add(String str, ArrayList<GroupKey> critArray) {
+    void add(String str, List<GroupKey> critArray) {
         string.add(str);
         criterions1.add(critArray.get(0));
         criterions2.add(critArray.get(1));
