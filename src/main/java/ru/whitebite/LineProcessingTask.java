@@ -77,7 +77,7 @@ public class LineProcessingTask implements Runnable {
             }
         } else {
             System.out.println("Invalid line: " + s);
-            Store.INVALID_LINES++;
+            Store.INVALID_LINES.incrementAndGet();
         }
     }
 }
