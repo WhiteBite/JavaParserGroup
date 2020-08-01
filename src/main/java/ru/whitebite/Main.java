@@ -78,5 +78,6 @@ public class Main {
             }
         }
         System.out.println("bigGroup: " + bigGroup);
+        System.out.println("InvalidLines: " + Store.INVALID_LINES);
     }
 }

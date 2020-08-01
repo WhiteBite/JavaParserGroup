@@ -9,16 +9,17 @@ import java.time.Instant;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArraySet;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Stream;
 
 public class Store {
     public static long MAX_LINES;
     public static final String InFILENAME = "lng.csv";
     public static final String OutFILENAME = "text.txt";
+    protected static volatile AtomicLong INVALID_LINES;
     protected static final Map<GroupKey, Group> groups = new ConcurrentHashMap<>();
     protected static final Set<Group> setGroups = ConcurrentHashMap.newKeySet();
     public static long timeWork = 20L;
-    public static long INVALID_LINES;
     public static Instant start = Instant.now();
 
     public static void printSet() {
