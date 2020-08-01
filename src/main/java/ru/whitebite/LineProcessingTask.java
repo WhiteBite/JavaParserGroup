@@ -1,5 +1,7 @@
 package ru.whitebite;
 
+import java.time.Duration;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,10 +26,14 @@ public class LineProcessingTask implements Runnable {
     }
 
     public static void groupAdder(String line) {
-        //System.out.print("Parsing line:"+line);
         List<GroupKey> criterions = LineProcessingTask.parseLineToSet(line);
-        //System.out.print(" Success. Creating criterions ");
         Group nGroup;
+//        Group newGroup = new Group();
+//        newGroup.add(line, criterions);
+//        Store.groups.put(criterions.get(0), newGroup);
+//        Store.groups.put(criterions.get(1), newGroup);
+//        Store.groups.put(criterions.get(2), newGroup);
+//        Store.setGroups.add(newGroup);
         if (!criterions.get(0).key.equals("\"\"") && Store.groups.get(criterions.get(0)) != null) {
             nGroup = Store.groups.get(criterions.get(0));
             Store.groups.get(criterions.get(0)).add(line, criterions);
@@ -55,22 +61,23 @@ public class LineProcessingTask implements Runnable {
                 }
             }
         }
-        //System.out.println("Success");
-        //return;
     }
 
     public LineProcessingTask(String line, double iteration) {
         this.s = line;
         this.iteration = iteration;
-
     }
 
     @Override
     public void run() {
         if (verifyLine(s)) {
             groupAdder(s);
+            if ((iteration / MAX_LINES * 100) % 10 == 0) {
+                System.out.println("Completed on " + (int) (iteration / MAX_LINES * 100) + "%  [t: " + Instant.now() + "]");
+            }
+        } else {
+            System.out.println("Invalid line: " + s);
+            Store.INVALID_LINES++;
         }
-        if ((iteration / MAX_LINES * 100) % 10 == 0)
-            System.out.println("Completed on " + (int) (iteration / MAX_LINES * 100) + "%");
     }
 }

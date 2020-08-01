@@ -1,15 +1,25 @@
 package ru.whitebite;
 
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.time.Instant;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArraySet;
+import java.util.stream.Stream;
 
 public class Store {
-    public static Double MAX_LINES = 50000D;
-    public static final String FILENAME = "text.txt";
+    public static long MAX_LINES;
+    public static final String InFILENAME = "lng.csv";
+    public static final String OutFILENAME = "text.txt";
     protected static final Map<GroupKey, Group> groups = new ConcurrentHashMap<>();
-    protected static final Set<Group> setGroups = new CopyOnWriteArraySet<>();
+    protected static final Set<Group> setGroups = ConcurrentHashMap.newKeySet();
+    public static long timeWork = 20L;
+    public static long INVALID_LINES;
+    public static Instant start = Instant.now();
 
     public static void printSet() {
         int i = 0;
@@ -28,5 +38,7 @@ public class Store {
             i++;
         }
     }
-    private Store(){}
+
+    private Store() {
+    }
 }
