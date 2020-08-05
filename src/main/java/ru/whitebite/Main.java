@@ -23,8 +23,6 @@ public class Main {
         try (Stream<String> stream = Files.lines(path)) {
             Store.MAX_LINES = stream.count();
         }
-
-        //  Store.MAX_LINES = 400000;
     }
 
     @SneakyThrows
@@ -45,18 +43,17 @@ public class Main {
                 System.out.println("End Reading:  " + Duration.between(Store.start, end));
         }
 
-        // Wait for all the tasks to be finished
         es.shutdown();
         if (!es.awaitTermination(Store.timeWork, TimeUnit.MINUTES)) {
-
             if (Store.DEBUG)
                 System.out.println("Time is up");
             es.shutdownNow();
         }
-        if (Store.DEBUG)
-            System.out.println("SetGroup size: " + Store.setGroups.size());
         writeToFile();
-        System.out.println("End Work: " + Duration.between(Store.start, Instant.now()));
+        System.out.println("Total groups: " + Store.setGroups.size());
+        System.out.println("Group With More Than 1 Element: " + Store.BIGGROUP);
+        System.out.println("InvalidLines: " + Store.INVALID_LINES);
+        System.out.println("Running time : " + Duration.between(Store.start, Instant.now()));
     }
 
     @SneakyThrows
@@ -86,10 +83,6 @@ public class Main {
                 }
                 i++;
             }
-        }
-        if (Store.DEBUG) {
-            System.out.println("Group With More Than 1 Element: " + Store.BIGGROUP);
-            System.out.println("InvalidLines: " + Store.INVALID_LINES);
         }
     }
 }

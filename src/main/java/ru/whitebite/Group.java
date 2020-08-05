@@ -17,13 +17,13 @@ public class Group implements Comparable {
         criterions1.add(critArray.get(0));
         criterions2.add(critArray.get(1));
         criterions3.add(critArray.get(2));
-        if (strings.size()==2){
+        if (strings.size() == 2) {
             Store.BIGGROUP.incrementAndGet();
         }
     }
 
     @Override
     public int compareTo(Object o) {
-        return ((Group)o).strings.size()-this.strings.size();
+        return ((Group) o).strings.size() - this.strings.size();
     }
 }
