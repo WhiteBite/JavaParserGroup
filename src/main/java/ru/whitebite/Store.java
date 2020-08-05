@@ -13,7 +13,9 @@ import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Stream;
 
 public class Store {
+    public static volatile boolean DEBUG = false;
     public static long MAX_LINES;
+    public static volatile AtomicLong BIGGROUP = new AtomicLong(0);
     public static final String InFILENAME = "lng.csv";
     public static final String OutFILENAME = "text.txt";
     protected static volatile AtomicLong INVALID_LINES = new AtomicLong(0);
@@ -22,23 +24,6 @@ public class Store {
     public static long timeWork = 20L;
     public static Instant start = Instant.now();
 
-    public static void printSet() {
-        int i = 0;
-        for (Group group : setGroups) {
-            System.out.println("Group: " + i);
-            for (GroupKey groupKey : group.criterions1) {
-                System.out.println(groupKey.column + " " + groupKey.key);
-            }
-            for (GroupKey groupKey : group.criterions2) {
-                System.out.println(groupKey.column + " " + groupKey.key);
-            }
-            for (GroupKey groupKey : group.criterions3) {
-                System.out.println(groupKey.column + " " + groupKey.key);
-            }
-            System.out.println(group.string);
-            i++;
-        }
-    }
 
     private Store() {
     }

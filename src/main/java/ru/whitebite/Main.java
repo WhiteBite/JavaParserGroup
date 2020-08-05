@@ -9,6 +9,9 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.Duration;
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.concurrent.*;
 import java.util.stream.Stream;
 
@@ -21,7 +24,7 @@ public class Main {
             Store.MAX_LINES = stream.count();
         }
 
-      //  Store.MAX_LINES = 400000;
+        //  Store.MAX_LINES = 400000;
     }
 
     @SneakyThrows
@@ -37,47 +40,56 @@ public class Main {
                 i++;
             }
             end = Instant.now();
-            System.out.println("End Reading:  " + Duration.between(Store.start, end));
+
+            if (Store.DEBUG)
+                System.out.println("End Reading:  " + Duration.between(Store.start, end));
         }
 
         // Wait for all the tasks to be finished
         es.shutdown();
         if (!es.awaitTermination(Store.timeWork, TimeUnit.MINUTES)) {
-            System.out.println("Time is up");
+
+            if (Store.DEBUG)
+                System.out.println("Time is up");
             es.shutdownNow();
         }
-        System.out.println("SetGroup size: " + Store.setGroups.size());
+        if (Store.DEBUG)
+            System.out.println("SetGroup size: " + Store.setGroups.size());
         writeToFile();
-        end = Instant.now();
-        System.out.println("End Work: " + Duration.between(Store.start, end));
+        System.out.println("End Work: " + Duration.between(Store.start, Instant.now()));
     }
 
     @SneakyThrows
     public static void main(String[] args) {
-
         work();
     }
 
     @SneakyThrows
     public static void writeToFile() {
-        String index;
-        int bigGroup = 0;
+        List<Group> sortedList = new ArrayList<>(Store.setGroups);
+        Collections.sort(sortedList);
+
+        if (Store.DEBUG)
+            System.out.println("Start writing: " + Duration.between(Store.start, Instant.now()));
+        String grNum;
         try (FileOutputStream outputStream = new FileOutputStream(Store.OutFILENAME)) {
             int i = 0;
-            for (Group group : Store.setGroups) {
-                int grSize = group.string.size();
-                index = "Group " + i + " [" + grSize + "]\n";
-                if (grSize > 1)
-                    bigGroup++;
-                outputStream.write(index.getBytes());
-                for (String str : group.string) {
+            String countBigGroup = Store.BIGGROUP + " - Groups With More Than 1 Element \n";
+            outputStream.write(countBigGroup.getBytes());
+            for (Group group : sortedList) {
+                int grSize = group.strings.size();
+                grNum = "Group " + i + " [" + grSize + "]\n";
+                outputStream.write(grNum.getBytes());
+                for (String str : group.strings) {
                     outputStream.write(str.getBytes());
                     outputStream.write('\n');
                 }
                 i++;
             }
         }
-        System.out.println("bigGroup: " + bigGroup);
-        System.out.println("InvalidLines: " + Store.INVALID_LINES);
+        if (Store.DEBUG) {
+            System.out.println("Group With More Than 1 Element: " + Store.BIGGROUP);
+            System.out.println("InvalidLines: " + Store.INVALID_LINES);
+        }
     }
 }
